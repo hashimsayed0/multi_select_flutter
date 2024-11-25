@@ -15,7 +15,7 @@ class MultiSelectDialogField<V> extends FormField<List<V>> {
   final BoxDecoration? decoration;
 
   /// Set text that is displayed on the button.
-  final Text? buttonText;
+  final Widget? buttonText;
 
   /// Specify the button icon.
   final Icon? buttonIcon;
@@ -199,7 +199,7 @@ class MultiSelectDialogField<V> extends FormField<List<V>> {
 class _MultiSelectDialogFieldView<V> extends StatefulWidget {
   final MultiSelectListType? listType;
   final BoxDecoration? decoration;
-  final Text? buttonText;
+  final Widget? buttonText;
   final Icon? buttonIcon;
   final Widget? title;
   final List<MultiSelectItem<V>> items;
