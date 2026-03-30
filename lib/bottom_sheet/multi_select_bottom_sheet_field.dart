@@ -435,8 +435,8 @@ class __MultiSelectBottomSheetFieldViewState<V>
             maxChildSize: widget.maxChildSize,
           );
         });
-    print(myVar.toString());
-    _selectedItems = myVar!;
+    // print(myVar.toString());
+    // _selectedItems = myVar!;
   }
 
   @override
