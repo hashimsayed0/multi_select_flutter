@@ -230,6 +230,12 @@ class _MultiSelectBottomSheetState<T> extends State<MultiSelectBottomSheet<T>> {
       mediaQuery.viewInsets.bottom,
       mediaQuery.padding.bottom,
     );
+    final colorScheme = Theme.of(context).colorScheme;
+    final searchBorderColor = colorScheme.onSurface.withValues(alpha: 0.2);
+    final pinnedHeaderHeight = 120.0;
+    final sheetBackgroundColor =
+        Theme.of(context).bottomSheetTheme.backgroundColor ??
+            colorScheme.surface;
 
     return Container(
       padding: EdgeInsets.only(bottom: bottomInset),
@@ -241,88 +247,132 @@ class _MultiSelectBottomSheetState<T> extends State<MultiSelectBottomSheet<T>> {
         builder: (BuildContext context, ScrollController scrollController) {
           return Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _showSearch
-                        ? Expanded(
-                            child: Container(
-                              padding: const EdgeInsets.only(left: 10),
-                              child: TextField(
-                                autofocus: true,
-                                style: widget.searchTextStyle,
-                                decoration: InputDecoration(
-                                  hintStyle: widget.searchHintStyle,
-                                  hintText: widget.searchHint ?? "Search",
-                                  focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: widget.selectedColor ??
-                                            Theme.of(context).primaryColor),
-                                  ),
+              Expanded(
+                child: CustomScrollView(
+                  controller: scrollController,
+                  slivers: [
+                    SliverPersistentHeader(
+                      pinned: true,
+                      delegate: _PinnedHeaderDelegate(
+                        height: pinnedHeaderHeight,
+                        child: Material(
+                          color: sheetBackgroundColor,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: colorScheme.onSurface
+                                      .withValues(alpha: 0.06),
                                 ),
-                                onChanged: (val) {
-                                  List<MultiSelectItem<T>> filteredList = [];
-                                  filteredList = widget.updateSearchQuery(
-                                      val, widget.items);
-                                  setState(() {
-                                    if (widget.separateSelectedItems) {
-                                      _items =
-                                          widget.separateSelected(filteredList);
-                                    } else {
-                                      _items = filteredList;
-                                    }
-                                  });
-                                },
                               ),
                             ),
-                          )
-                        : Padding(
-                            padding: EdgeInsets.only(left: 16),
-                            child: widget.title ??
-                                Text(
-                                  "Select",
-                                  style: TextStyle(fontSize: 18),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.only(top: 14),
+                                  child: Center(
+                                    child: Container(
+                                      width: 60,
+                                      height: 6,
+                                      decoration: BoxDecoration(
+                                        color: colorScheme.onSurface
+                                            .withValues(alpha: 0.3),
+                                        borderRadius: BorderRadius.circular(2),
+                                      ),
+                                    ),
+                                  ),
                                 ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: 22, top: 14),
+                                  child: widget.title ??
+                                      Text(
+                                        "Select",
+                                        style: TextStyle(fontSize: 18),
+                                      ),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.only(top: 14),
+                                  child: TextField(
+                                    autofocus: true,
+                                    style: widget.searchTextStyle,
+                                    decoration: InputDecoration(
+                                      fillColor: colorScheme.surface
+                                          .withValues(alpha: 0.8),
+                                      hintStyle: widget.searchHintStyle,
+                                      hintText: widget.searchHint ?? "Search",
+                                      prefixIcon: widget.searchIcon ??
+                                          Icon(
+                                            Icons.search,
+                                            color: colorScheme.onSurface
+                                                .withValues(alpha: 0.8),
+                                          ),
+                                      border: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: searchBorderColor,
+                                        ),
+                                      ),
+                                      enabledBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: searchBorderColor,
+                                        ),
+                                      ),
+                                      focusedBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: searchBorderColor,
+                                        ),
+                                      ),
+                                      disabledBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: searchBorderColor,
+                                        ),
+                                      ),
+                                      errorBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: searchBorderColor,
+                                        ),
+                                      ),
+                                      focusedErrorBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: searchBorderColor,
+                                        ),
+                                      ),
+                                    ),
+                                    onChanged: (val) {
+                                      List<MultiSelectItem<T>> filteredList =
+                                          [];
+                                      filteredList = widget.updateSearchQuery(
+                                          val, widget.items);
+                                      setState(() {
+                                        if (widget.separateSelectedItems) {
+                                          _items = widget
+                                              .separateSelected(filteredList);
+                                        } else {
+                                          _items = filteredList;
+                                        }
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                    widget.searchable
-                        ? IconButton(
-                            icon: _showSearch
-                                ? widget.closeSearchIcon ?? Icon(Icons.close)
-                                : widget.searchIcon ?? Icon(Icons.search),
-                            onPressed: () {
-                              setState(() {
-                                _showSearch = !_showSearch;
-                                if (!_showSearch) {
-                                  if (widget.separateSelectedItems) {
-                                    _items =
-                                        widget.separateSelected(widget.items);
-                                  } else {
-                                    _items = widget.items;
-                                  }
-                                }
-                              });
-                            },
-                          )
-                        : Padding(
-                            padding: EdgeInsets.all(15),
-                          ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: widget.listType == null ||
-                        widget.listType == MultiSelectListType.LIST
-                    ? ListView.builder(
-                        controller: scrollController,
-                        itemCount: _items.length,
-                        itemBuilder: (context, index) {
-                          return _buildListItem(_items[index]);
-                        },
+                        ),
+                      ),
+                    ),
+                    if (widget.listType == null ||
+                        widget.listType == MultiSelectListType.LIST)
+                      SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            return _buildListItem(_items[index]);
+                          },
+                          childCount: _items.length,
+                        ),
                       )
-                    : SingleChildScrollView(
-                        controller: scrollController,
+                    else
+                      SliverToBoxAdapter(
                         child: Container(
                           padding: EdgeInsets.all(10),
                           child: Wrap(
@@ -330,6 +380,8 @@ class _MultiSelectBottomSheetState<T> extends State<MultiSelectBottomSheet<T>> {
                           ),
                         ),
                       ),
+                  ],
+                ),
               ),
               Container(
                 padding: EdgeInsets.all(2),
@@ -382,5 +434,32 @@ class _MultiSelectBottomSheetState<T> extends State<MultiSelectBottomSheet<T>> {
         },
       ),
     );
+  }
+}
+
+class _PinnedHeaderDelegate extends SliverPersistentHeaderDelegate {
+  final double height;
+  final Widget child;
+
+  _PinnedHeaderDelegate({
+    required this.height,
+    required this.child,
+  });
+
+  @override
+  double get minExtent => height;
+
+  @override
+  double get maxExtent => height;
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return child;
+  }
+
+  @override
+  bool shouldRebuild(covariant _PinnedHeaderDelegate oldDelegate) {
+    return oldDelegate.height != height || oldDelegate.child != child;
   }
 }
