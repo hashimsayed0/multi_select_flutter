@@ -455,7 +455,10 @@ class __MultiSelectBottomSheetFieldViewState<V>
                       border: Border(
                         bottom: BorderSide(
                           color: widget.state != null && widget.state!.hasError
-                              ? Colors.red.shade800.withOpacity(0.6)
+                              ? Theme.of(context)
+                                  .colorScheme
+                                  .error
+                                  .withOpacity(0.6)
                               : _selectedItems.isNotEmpty
                                   ? (widget.selectedColor != null &&
                                           widget.selectedColor !=
@@ -472,7 +475,7 @@ class __MultiSelectBottomSheetFieldViewState<V>
                       ),
                     )
                 : widget.decoration,
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.all(14),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -490,11 +493,11 @@ class __MultiSelectBottomSheetFieldViewState<V>
             ? Row(
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.only(left: 4),
+                    padding: const EdgeInsets.only(left: 4, top: 2),
                     child: Text(
                       widget.state!.errorText!,
                       style: TextStyle(
-                        color: Colors.red[800],
+                        color: Theme.of(context).colorScheme.error,
                         fontSize: 12.5,
                       ),
                     ),

@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import '../util/multi_select_item.dart';
 import '../util/multi_select_actions.dart';
@@ -223,9 +225,14 @@ class _MultiSelectBottomSheetState<T> extends State<MultiSelectBottomSheet<T>> {
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+    final bottomInset = math.max(
+      mediaQuery.viewInsets.bottom,
+      mediaQuery.padding.bottom,
+    );
+
     return Container(
-      padding:
-          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      padding: EdgeInsets.only(bottom: bottomInset),
       child: DraggableScrollableSheet(
         initialChildSize: widget.initialChildSize ?? 0.3,
         minChildSize: widget.minChildSize ?? 0.3,
@@ -271,11 +278,14 @@ class _MultiSelectBottomSheetState<T> extends State<MultiSelectBottomSheet<T>> {
                               ),
                             ),
                           )
-                        : widget.title ??
-                            Text(
-                              "Select",
-                              style: TextStyle(fontSize: 18),
-                            ),
+                        : Padding(
+                            padding: EdgeInsets.only(left: 16),
+                            child: widget.title ??
+                                Text(
+                                  "Select",
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                          ),
                     widget.searchable
                         ? IconButton(
                             icon: _showSearch
