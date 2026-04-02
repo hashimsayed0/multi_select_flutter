@@ -239,6 +239,11 @@ class _MultiSelectBottomSheetState<T> extends State<MultiSelectBottomSheet<T>> {
 
     return Container(
       padding: EdgeInsets.only(bottom: bottomInset),
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+      ),
       child: DraggableScrollableSheet(
         initialChildSize: widget.initialChildSize ?? 0.3,
         minChildSize: widget.minChildSize ?? 0.3,
@@ -259,6 +264,8 @@ class _MultiSelectBottomSheetState<T> extends State<MultiSelectBottomSheet<T>> {
                           color: sheetBackgroundColor,
                           child: Container(
                             decoration: BoxDecoration(
+                              color: colorScheme.surfaceContainerHighest
+                                  .withValues(alpha: 0.3),
                               border: Border(
                                 bottom: BorderSide(
                                   color: colorScheme.onSurface
