@@ -232,16 +232,18 @@ class _MultiSelectBottomSheetState<T> extends State<MultiSelectBottomSheet<T>> {
     );
     final colorScheme = Theme.of(context).colorScheme;
     final searchBorderColor = colorScheme.onSurface.withValues(alpha: 0.2);
-    final pinnedHeaderHeight = 120.0;
+    final pinnedHeaderHeight = 142.0;
     final sheetBackgroundColor =
         Theme.of(context).bottomSheetTheme.backgroundColor ??
-            colorScheme.surface;
+            colorScheme.surfaceContainerHighest.withValues(alpha: 0.1);
+    final actionsBackgroundColor =
+        colorScheme.surfaceContainerHighest.withValues(alpha: 0.3);
 
     return Container(
       padding: EdgeInsets.only(bottom: bottomInset),
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: colorScheme.surface,
+        color: sheetBackgroundColor,
         borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
       ),
       child: DraggableScrollableSheet(
@@ -264,8 +266,7 @@ class _MultiSelectBottomSheetState<T> extends State<MultiSelectBottomSheet<T>> {
                           color: sheetBackgroundColor,
                           child: Container(
                             decoration: BoxDecoration(
-                              color: colorScheme.surfaceContainerHighest
-                                  .withValues(alpha: 0.3),
+                              color: actionsBackgroundColor,
                               border: Border(
                                 bottom: BorderSide(
                                   color: colorScheme.onSurface
@@ -293,14 +294,27 @@ class _MultiSelectBottomSheetState<T> extends State<MultiSelectBottomSheet<T>> {
                                 Padding(
                                   padding:
                                       const EdgeInsets.only(left: 22, top: 14),
-                                  child: widget.title ??
-                                      Text(
-                                        "Select",
-                                        style: TextStyle(fontSize: 18),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      widget.title ??
+                                          Text(
+                                            "Select",
+                                            style: TextStyle(fontSize: 18),
+                                          ),
+                                      IconButton(
+                                        icon: Icon(Icons.close),
+                                        onPressed: () {
+                                          FocusScope.of(context).unfocus();
+                                          Navigator.pop(context);
+                                        },
                                       ),
+                                    ],
+                                  ),
                                 ),
                                 Container(
-                                  padding: const EdgeInsets.only(top: 14),
+                                  padding: const EdgeInsets.only(top: 10),
                                   child: TextField(
                                     autofocus: true,
                                     style: widget.searchTextStyle,
@@ -392,8 +406,7 @@ class _MultiSelectBottomSheetState<T> extends State<MultiSelectBottomSheet<T>> {
               ),
               Container(
                 padding: EdgeInsets.all(2),
-                color:
-                    colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                color: actionsBackgroundColor,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
