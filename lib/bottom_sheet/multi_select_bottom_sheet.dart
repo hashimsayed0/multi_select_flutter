@@ -238,6 +238,7 @@ class _MultiSelectBottomSheetState<T> extends State<MultiSelectBottomSheet<T>> {
             colorScheme.surfaceContainerHighest.withValues(alpha: 0.1);
     final actionsBackgroundColor =
         colorScheme.surfaceContainerHighest.withValues(alpha: 0.3);
+    final headerBackgroundColor = actionsBackgroundColor.withValues(alpha: 1);
 
     return Container(
       padding: EdgeInsets.only(bottom: bottomInset),
@@ -263,10 +264,10 @@ class _MultiSelectBottomSheetState<T> extends State<MultiSelectBottomSheet<T>> {
                       delegate: _PinnedHeaderDelegate(
                         height: pinnedHeaderHeight,
                         child: Material(
-                          color: sheetBackgroundColor,
+                          color: headerBackgroundColor,
                           child: Container(
                             decoration: BoxDecoration(
-                              color: actionsBackgroundColor,
+                              color: headerBackgroundColor,
                               border: Border(
                                 bottom: BorderSide(
                                   color: colorScheme.onSurface
